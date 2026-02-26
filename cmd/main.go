@@ -3,12 +3,17 @@ package main
 import (
 	"fmt"
 
-	"github.com/ajay-patidar-0/rag/internal/api"
+	"github.com/ajay-patidar-0/rag/internal/rag"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	fmt.Println("RAG based project")
-	server := api.NewApiServer()
+	godotenv.Load()
+	query := "what is java"
 
-	server.Run()
+	_, err := rag.GetEmbedding(query)
+	if err != nil {
+		fmt.Printf("error at GetEmbedding %v", err)
+	}
 }
