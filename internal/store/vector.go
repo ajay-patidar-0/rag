@@ -7,12 +7,12 @@ import (
 )
 
 type VectorDB struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func NewVectorDB(db *sql.DB) *VectorDB {
 	return &VectorDB{
-		db: db,
+		DB: db,
 	}
 }
 
@@ -20,7 +20,7 @@ func (v *VectorDB) AddVector(content string, vector string) error {
 	query := `INSERT INTO documents (content,embedding)
 	VALUES($1, $2)`
 
-	_, err := v.db.Query(query, content, vector)
+	_, err := v.DB.Query(query, content, vector)
 	if err != nil {
 		return fmt.Errorf("Enable to insert embedding %w", err)
 	}
