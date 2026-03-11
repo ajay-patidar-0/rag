@@ -15,7 +15,7 @@ func SearchSimilar(db *sql.DB, query string) ([]string, error) {
 
 	vecQuery := store.ToPGVector(emb)
 
-	rows, err := db.Query(`SELECT content FROM documents ORDER BY embedding <=>$1 LIMIT 2`, vecQuery)
+	rows, err := db.Query(`SELECT content FROM questions ORDER BY embedding <=>$1 LIMIT 2`, vecQuery)
 	if err != nil {
 		return nil, err
 	}
