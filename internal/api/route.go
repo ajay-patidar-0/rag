@@ -27,7 +27,9 @@ func NewApiServer() *ApiServer {
 func (as *ApiServer) Run() {
 	r := mux.NewRouter()
 
+	r.HandleFunc("/", ServHome)
 	r.HandleFunc("/query", as.QueryHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/paper", as.ExamPaperHandler).Methods("POST", "OPTIONS")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -42,5 +44,5 @@ func (as *ApiServer) Run() {
 }
 
 func ServHome(w http.ResponseWriter, r *http.Request) {
-
+	w.Write([]byte("<h2>Welcome to another world<h2>"))
 }

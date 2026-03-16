@@ -38,7 +38,7 @@ func (v *VectorDB) FindCourseByName(courseName string) (uuid.UUID, error) {
 	return courseId, nil
 }
 
-func (v *VectorDB) AddExamPaper(courseId uuid.UUID, examYear int, imageUrl string) (uuid.UUID, error) {
+func (v *VectorDB) AddExamPaper(courseId uuid.UUID, examYear string, imageUrl string) (uuid.UUID, error) {
 	query := `INSERT INTO exam_papers (course_id, exam_year, image_url) VALUES ($1, $2, $3) RETURNING id`
 
 	var examId uuid.UUID

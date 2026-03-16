@@ -1,5 +1,7 @@
 package model
 
+import "strings"
+
 type RequestBody struct {
 	Contents         []Content        `json:"contents"`
 	GenerationConfig GenerationConfig `json:"generationConfig"`
@@ -11,17 +13,17 @@ type Content struct {
 
 type Part struct {
 	Text       string      `json:"text,omitempty"`
-	InlineData *InlineData `json:"inline_data,omitempty"`
+	InlineData *InlineData `json:"inlineData,omitempty"`
 }
 
 type InlineData struct {
-	MimeType string `json:"mime_type"`
+	MimeType string `json:"mimeType"`
 	Data     string `json:"data"`
 }
 
 type GenerationConfig struct {
-	ResponseMimeType string         `json:"response_mime_type"`
-	ResponseSchema   map[string]any `json:"response_schema"`
+	ResponseMimeType string         `json:"responseMimeType"`
+	ResponseSchema   map[string]any `json:"responseSchema"`
 }
 
 var responseSchema = map[string]any{
@@ -69,7 +71,7 @@ var responseSchema = map[string]any{
 	},
 }
 
-func CreateRequestBody(encodedImage []string) *RequestBody {
+func CreateRequestBody(encodedPaper string) RequestBody {
 	parts := []Part{
 		{
 			Text: `Act as a specialized OCR and Document Parser. Analyze the provided exam paper and extract all data into the specified JSON format.
@@ -81,16 +83,21 @@ Formatting Rules:
 		},
 	}
 
-	for _, enImg := range encodedImage {
-		parts = append(parts, Part{
-			InlineData: &InlineData{
-				MimeType: "image/jpeg",
-				Data:     enImg,
-			},
-		})
+	mimeType := "image/jpeg"
+	if strings.HasPrefix(encodedPaper, "JVBERi") {
+		mimeType = "application/pdf"
+	} else if strings.HasPrefix(encodedPaper, "iVBORw0KGgo") {
+		mimeType = "image/png"
 	}
 
-	return &RequestBody{
+	parts = append(parts, Part{
+		InlineData: &InlineData{
+			MimeType: mimeType,
+			Data:     encodedPaper,
+		},
+	})
+
+	return RequestBody{
 		Contents: []Content{
 			{
 				Parts: parts,
